@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { ChevronDown, ArrowDown, Menu, X } from "lucide-react"
 import "./App.css"
+import SnowBackground from "../public/SnowBackground.mp4"
 
 
 
@@ -78,10 +79,14 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
+  const [logoShrunk, setLogoShrunk] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+      setLogoShrunk(window.scrollY > 40)
+    }
     window.addEventListener("scroll", handleScroll)
 
     // Play video when component mounts
@@ -98,7 +103,7 @@ function App() {
       <div className="video-background">
         <video ref={videoRef} autoPlay muted loop playsInline className="background-video">
           <source
-            src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0fd273d2c6d9a064f3ae35579b2bbdf&profile_id=139&oauth2_token_id=57447761"
+            src={SnowBackground}
             type="video/mp4"
           />
           Your browser does not support the video tag.
@@ -150,6 +155,22 @@ function App() {
       {/* Menu Overlay */}
       <div className={`menu-overlay ${isMenuOpen ? "open" : ""}`}>
         <div className="menu-content">
+          {/* Cross (close) button for menu overlay */}
+          <button
+            className="menu-close-btn"
+            onClick={() => setIsMenuOpen(false)}
+            style={{
+              position: 'absolute',
+              top: 24,
+              right: 24,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              zIndex: 1002
+            }}
+          >
+            <X size={32} className="close-icon" />
+          </button>
           <div className="menu-logo">
             <span className="logo-text">snow dream studios</span>
           </div>
@@ -181,13 +202,13 @@ function App() {
         <div className="content-container">
           {/* Left Side - Branding and Social */}
           <div className="left-content">
-            <div className="logo-box" id="logoBox">
-  <h1 className="brand-title">
-    <span className="line">snow</span><br />
-    <span className="line">dream</span><br />
-    <span className="line studio">studio</span>
-  </h1>
-</div>
+            <div className={"logo-box" + (logoShrunk ? " shrunk" : "")} id="logoBox">
+              <h1 className="brand-title">
+                <span className="line">snow</span><br />
+                <span className="line">dream</span><br />
+                <span className="line studio">studio</span>
+              </h1>
+            </div>
 
             <div className="social-links">
               <a href="#" className="social-link">
